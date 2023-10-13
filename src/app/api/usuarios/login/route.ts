@@ -2,19 +2,17 @@
 import { emailRegex, passwordRegex } from "@/utils/regex"
 import { PrismaClient } from "@prisma/client"
 import { compare } from "bcrypt"
+//Importo la función compare desde BCrypt
 import { sign } from "jsonwebtoken"
 
 const prisma = new PrismaClient()
 
-
 export async function POST(req: Request){
 
-    //Recuperar Datos por parte de la peticion
-
+    //Recuperar los datos ingresados, por parte de la peticion
     const usuario = await req.json()
 
-    //Validar Datos, corresponden a su formato
-
+    //Validar Datos, correspondiente a su formato
     if(!usuario.email.match(emailRegex)){
         return new Response ("Email inválido", {status: 400})
     }
@@ -24,24 +22,23 @@ export async function POST(req: Request){
     }
 
     //Verificar si la cuenta existe
-
     const usuarioEnDB = await prisma.usuario.findUnique({
         //Obtengo el usuario guardado en la DB
 
-        //le indico donde o en base a que parametro va a buscar al usuario
+        //Le indico donde o en base a qué parametro va a buscar al usuario
         where: {
             email: usuario.email
             //Donde el email de la DB sea igual al recibido desde el cliente
         }
     })
 
-    if(!usuarioEnDB){
+    if(!usuarioEnDB){ //Si no hay un usuario en la DB que contenga el mail ingresado
         return new Response ("cuenta inexistente", {status: 403})
+        // 403:
     }
 
 
     //Validar Constraseña
-
     const contrasenaValida = await compare(
         usuario.password, 
         usuarioEnDB.password
@@ -49,9 +46,11 @@ export async function POST(req: Request){
 
     if(!contrasenaValida)
     return new Response ("contraseña inválida", {status: 401})
+    //401 Unauthorized 
+
 
     const token = sign (usuarioEnDB, process.env.TOKEN_SECRET as string, {
-        expiresIn: "7d"
+        expiresIn: "7d" //Puedo indicar en cuanto tiempo expira el token
     })
 
     return new Response(token, {status: 201})
