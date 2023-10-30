@@ -14,11 +14,11 @@ export async function POST(req: Request){
 
     //Validar Datos, correspondiente a su formato
     if(!usuario.email.match(emailRegex)){
-        return new Response ("Email inválido", {status: 400})
+        return new Response (JSON.stringify({msg:"Email inválido"}), {status: 400})
     }
 
     if(!usuario.password.match(passwordRegex)){
-        return new Response ("Contraseña inválido", {status: 400})
+        return new Response (JSON.stringify({msg: "Contraseña invalida"}), {status: 400})
     }
 
     //Verificar si la cuenta existe
@@ -33,10 +33,9 @@ export async function POST(req: Request){
     })
 
     if(!usuarioEnDB){ //Si no hay un usuario en la DB que contenga el mail ingresado
-        return new Response ("cuenta inexistente", {status: 403})
+        return new Response (JSON.stringify({msg: "No existe una cuenta asociada a ese mail!"}), {status: 403})
         // 403:
     }
-
 
     //Validar Constraseña
     const contrasenaValida = await compare(
@@ -45,7 +44,7 @@ export async function POST(req: Request){
     )
 
     if(!contrasenaValida)
-    return new Response ("contraseña inválida", {status: 401})
+    return new Response (JSON.stringify({msg: "Contraseña incorrecta"}), {status: 401})
     //401 Unauthorized 
 
 
@@ -53,5 +52,5 @@ export async function POST(req: Request){
         expiresIn: "7d" //Puedo indicar en cuanto tiempo expira el token
     })
 
-    return new Response(token, {status: 201})
+    return new Response (JSON.stringify({token}), {status: 201})
 }
