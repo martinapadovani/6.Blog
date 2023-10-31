@@ -1,8 +1,3 @@
-//LOGICA:
-//Recuperar el email del usuario
-//Buscar el usario en la DB
-//Crearle un token unico
-//Mandarle el mail
 
 import { PrismaClient } from "@prisma/client"
 import { sign } from "jsonwebtoken"
@@ -27,7 +22,7 @@ export async function POST(req:Request){
     }
 
     //Si hay un usuario generamos un token unico para la recuperacion de su cuenta
-    const tokenUnico = sign(
+    const tokenMail = sign(
         datos.email, 
         process.env.TOKEN_SECRET as string, 
         {}
@@ -41,7 +36,7 @@ export async function POST(req:Request){
         asunto: "Recupera tu contraseña",
         from_name: "Blog de Roberto",
         to_name: usuario.nombre,
-        link: `http://localhost:3000/auth/recuperar/${tokenUnico}`, 
+        link: `http://localhost:3000/auth/recuperar/${tokenMail}`, 
         user_email: datos.email
     }
 

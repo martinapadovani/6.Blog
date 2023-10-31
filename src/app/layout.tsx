@@ -3,6 +3,7 @@ import { UserProvider } from '@/context/UserContext'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { EmailProvider } from '@/context/EmaiContext'
 
 const inter = Inter({ subsets: ['latin'] })
 

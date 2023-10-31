@@ -5,6 +5,7 @@ import {verify} from "jsonwebtoken"
 import { UserContext } from "@/context/UserContext"
 //Importamos el contexto que creamos
 import { useContext } from "react"
+import Swal from "sweetalert2"
 //Importamos la funcion de react que nos permite acceder a nuestro contexto
 
 
@@ -61,7 +62,11 @@ export default function FormularioDeRegistro(){
     //Manejo los posibles errores de la peticion
     if(respuesta.status != 201){
       const error = await respuesta.json() //Capturamos el error, que indicamos previamente en el Back
-      alert(error.msg) //Lo mostramos, accediendo al atributo msg del objeto donde recibimos el error
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text:   `${error.msg}`
+      })
     }
 
     //Si todo sale bien, obtengo el TOKEN que recibo del Back
@@ -89,33 +94,134 @@ export default function FormularioDeRegistro(){
     //@ts-ignore
     if(guardarDatosRef.current?.value){//Si el contenido del input es true
 
-      localStorage.setItem("usaurio", JSON.stringify(datosAEnviar))
+      localStorage.setItem("usuario", JSON.stringify(datosAEnviar))
       //Guardo en el localStorage los datos del usuario registrdo, en JSON
-
     } 
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Usuario registrado',
+      footer: '<a href="/auth/login">Ir a iniciar sesión</a>'
+    })
+
+    //@ts-ignore
+    nombreRef.current.value = ""
+    //@ts-ignore
+    edadRef.current.value = ""
+    //@ts-ignore
+    emailRef.current.value = ""
+    //@ts-ignore
+    passwordRef.current.value = ""
+    
   }
   
   //HTML
   return(
     <>
-      <form onSubmit={mandarDatosDeRegistro} className="text-black">
-        {/*Le indico al form que, al momento de subirse, ejecute la funcion */}
+      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+
+          <h2 className=" text-center text-2xl font-bold leading-9 tracking-tight text-white">
+            Register
+          </h2>
+
+        </div>
+
+        <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
+          <form onSubmit={mandarDatosDeRegistro} className="space-y-6" action="#" method="POST">
+
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium leading-6 text-white">
+                Name
+              </label>
+              <div className="mt-2">
+                <input ref={nombreRef}
+                  type="text"
+                  className="block w-full rounded-md border-0 px-2 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="Age" className="block text-sm font-medium leading-6 text-white">
+                Age
+              </label>
+              <div className="mt-2">
+                <input ref={edadRef}
+                  type="number" 
+                  inputMode="numeric"
+                  className="block w-full rounded-md border-0 px-2 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium leading-6 text-white">
+                Email address
+              </label>
+              <div className="mt-2">
+                <input ref={emailRef}
+                  type="email" 
+                  className="block w-full rounded-md border-0 px-2 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between">
+                <label htmlFor="password" className="block text-sm font-medium leading-6 text-white">
+                  Password
+                </label>
+              </div>
+              <div className="mt-2">
+                <input ref={passwordRef}
+                  type="password"
+                  className="block w-full rounded-md border-0 px-2 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
+
+            <div>
+              <button
+                type="submit"
+                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Register
+              </button>
+            </div>
+
+            <input ref={guardarDatosRef} type="checkbox" className="text-black text-sm font-medium leading-6"/> Guardar Datos
+          </form>
+
+        </div>
+      </div>
+
+
+
+
+
+
+      {/* 
+        <form onSubmit={mandarDatosDeRegistro} className="text-black">
+          Le indico al form que, al momento de subirse, ejecute la funcion
+        
+          <input ref={nombreRef} type="text" placeholder="Nombre completo" />
+          <input ref ={edadRef} type="number" inputMode="numeric" placeholder="Edad" />
+           Al indicar el inputMode en numeric, establezco que, cuando el usuario
+           seleccione el input para completarlo, se abre el teclado numerico y no el normal
+          <input ref={emailRef} type="email" placeholder="Email"/>
+          <input ref={passwordRef} type="password" placeholder="Contraseña"/
+          <input ref={guardarDatosRef} type="checkbox" className="text-white"/> Guardar Dato
+          <input type="submit" value="Registrar" className="text-white"/>
+        </form> 
+
+        <button onClick={() => console.log(user)}> Ver usuario </button>
+
+        <Link href="/perfil" >Ir al perfil del usuario</Link>
+
+      */}
+
       
-        <input ref={nombreRef} type="text" placeholder="Nombre completo" />
-        <input ref ={edadRef} type="number" inputMode="numeric" placeholder="Edad" />
-        {/* Al indicar el inputMode en numeric, establezco que, cuando el usuario
-         seleccione el input para completarlo, se abre el teclado numerico y no el normal*/}
-        <input ref={emailRef} type="email" placeholder="Email"/>
-        <input ref={passwordRef} type="password" placeholder="Contraseña"/>
-
-        <input ref={guardarDatosRef} type="checkbox" className="text-white"/> Guardar Datos
-
-        <input type="submit" value="Registrar" className="text-white"/>
-      </form>
-
-      <button onClick={() => console.log(user)}> Ver usuario </button>
-
-      <Link href="/perfil" >Ir al perfil del usuario</Link>
     </>    
   )
 }

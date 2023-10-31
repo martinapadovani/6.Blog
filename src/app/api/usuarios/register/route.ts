@@ -24,18 +24,18 @@ export async function POST(req: Request) {
         //Si alguno de los valores incluye undefined (no se definio el campo)
 
         //Devuelvo 400 Bad Request, ya que es una mala peticion
-        return new Response (JSON.stringify({msg: "Error! Faltan datos"}), {status: 400})
+        return new Response (JSON.stringify({msg: "Datos incompletos"}), {status: 400})
         //Devuelvo el error como un objeto con el atributo msg, transformado a json
     }
 
     //VALIDO LOS DATOS, que coincidan con su formato
     if(!usuario.email.match(emailRegex)) {
         //si el email ingresado no coincide con el REGEX
-        return new Response (JSON.stringify( {msg: "Error! email invalido"}), {status: 400})
+        return new Response (JSON.stringify( {msg: "Email inválido"}), {status: 400})
     }
 
     if(!usuario.password.match(passwordRegex)){
-        return new Response (JSON.stringify({msg: "Error! contraseña invalida"}), {status: 400})
+        return new Response (JSON.stringify({msg: "Contraseña inválida"}), {status: 400})
     }
 
     //Encripto mi contraseña

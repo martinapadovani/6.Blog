@@ -32,16 +32,44 @@ export default function ListaDeBlogs() {
     return (
 
         <ul>
-            <h2>Blog de Roberto</h2>
-
             {//Itero todos los blogs para mostrarlos con un formato html indicado
              blogs.map((blog, index) =>(
-                <Link key={index} href={`/blogs/${blog.slug}`}>
-                    <article>
-                         <h3>{blog.meta.title}</h3>
-                        <p>{blog.meta.description}</p>
-                    </article>
-                </Link>
+
+                <article key={index}
+                  className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm transition hover:shadow-lg sm:p-6
+                  flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 mt-10 sm:mx-auto sm:w-full sm:max-w-sm "
+                >
+                  <a href="#">
+                    <h3 className="mt-0.5 text-lg font-medium text-gray-900">
+                        {blog.meta.title}
+                    </h3>
+                  </a>
+
+                  <p className="mt-2 line-clamp-3 text-sm/relaxed text-gray-500">
+                        {blog.meta.description}
+                  </p>
+
+                  <a
+                    href={`/blogs/${blog.slug}`}
+                    className="group mt-4 inline-flex items-center gap-1 text-sm font-medium text-blue-600"
+                  >
+                    Leer Blog
+
+                    <span
+                      aria-hidden="true"
+                      className="block transition-all group-hover:ms-0.5 rtl:rotate-180"
+                    >
+                      &rarr;
+                    </span>
+                  </a>
+                </article>
+
+                // <Link key={index} href={`/blogs/${blog.slug}`}>
+                //     <article>
+                //          <h3>{blog.meta.title}</h3>
+                //         <p>{blog.meta.description}</p>
+                //     </article>
+                // </Link>
             ))}
         </ul>
 

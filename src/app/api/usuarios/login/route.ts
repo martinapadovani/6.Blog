@@ -18,7 +18,7 @@ export async function POST(req: Request){
     }
 
     if(!usuario.password.match(passwordRegex)){
-        return new Response (JSON.stringify({msg: "Contraseña invalida"}), {status: 400})
+        return new Response (JSON.stringify({msg: "Contraseña inválida"}), {status: 400})
     }
 
     //Verificar si la cuenta existe
