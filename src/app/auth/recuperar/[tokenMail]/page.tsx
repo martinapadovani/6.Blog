@@ -1,25 +1,34 @@
 "use client"
 import { EmailContext } from "@/context/EmaiContext"
+import { UserContext } from "@/context/UserContext"
 import { useRef, useContext, FormEvent } from "react"
 import Swal from "sweetalert2"
+
 
 export default function Page(){
 
   const passwordRef = useRef(null)
   const {emailUsuario} = useContext(EmailContext)
+  //const emailUsuario = "mpmartinapadovani@gmail.com"
   //Obtengo el mail del usuario desde el contexto, que fue agregardo desde la ruta de /recuperar
   //@ts-ignore
 
-  const datosAEnviar = {
-    email: emailUsuario,
-    //@ts-ignore
-    password: passwordRef.current?.value
-  }
-
   async function enviarDatos(evento: FormEvent){
     evento.preventDefault()
+      
+    const datosAEnviar = {
+      email: emailUsuario,
+      //@ts-ignore
+      password: passwordRef.current?.value
+    }
 
-    await fetch("http://localhost:3000/api/recuperar/cambio", {
+    console.log(datosAEnviar)
+
+    //@ts-ignore
+    console.log(passwordRef.current?.value)
+    console.log(emailUsuario)
+
+    const respuesta = await fetch("http://localhost:3000/api/recuperar/cambio", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -30,9 +39,19 @@ export default function Page(){
       //Le enviamos la nueva contraseña y el mail
     })
 
-    //@ts-ignore
-    console.log(passwordRef.current?.value)
-    console.log(emailUsuario)
+
+
+    if(respuesta.status == 400){
+      const error = await respuesta.json() 
+      Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text:   `${error.msg}`
+        })
+      //@ts-ignore
+      passwordRef.current.value = ""
+      return
+    }
       
     Swal.fire({
       icon: 'success',

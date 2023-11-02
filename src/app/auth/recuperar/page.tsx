@@ -5,6 +5,7 @@ import { send } from "@emailjs/browser"
 import { FormEvent, useRef, useState } from "react"
 import Swal from "sweetalert2"
 import { useContext } from "react"
+import { UserContext } from "@/context/UserContext"
 
 export default function Page(){
 
@@ -13,11 +14,14 @@ export default function Page(){
 
     //Importo el Contexto
     const {email, setEmail} = useContext(EmailContext)
+    const {user, setUser} = useContext(UserContext)
 
     async function recuperarContrasena(evento: FormEvent){
         evento.preventDefault()
 
-
+        //Obtengo el mail ingresado por el usuario
+        //@ts-ignore
+        const emailUsuario = emailRef.current?.value
 
         /*Hago una peticion a mi ruta del backend para enviarle el mail 
          del usuario, y luego obtener la respuesta con los datos de la platilla */
@@ -27,7 +31,7 @@ export default function Page(){
                 "Content-Type": "application/json"
             },
             //@ts-ignore
-            body: JSON.stringify({email: emailRef.current?.value})
+            body: JSON.stringify({email: emailUsuario})
             //Le enviamos el email que obtenemos desde el input del formulario
         })
 
@@ -54,12 +58,11 @@ export default function Page(){
         setEnviado(true)
 
         //@ts-ignore
-        console.log(emailRef.current?.value)
-
-        //Obtengo el mail ingresado por el usuario
-        //@ts-ignore
-        setEmail(emailRef.current?.value)
+        console.log(emailUsuario)
+        
+        setEmail(emailUsuario)
         //Lo ingreso como valor de "email" en el contexto
+        setUser(emailUsuario)
         
         Swal.fire({
             icon: 'success',
