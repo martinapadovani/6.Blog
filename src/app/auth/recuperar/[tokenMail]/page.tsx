@@ -1,23 +1,25 @@
 "use client"
 import { EmailContext } from "@/context/EmaiContext"
 import { UserContext } from "@/context/UserContext"
+import { decode } from "jsonwebtoken"
 import { useRef, useContext, FormEvent } from "react"
 import Swal from "sweetalert2"
 
 
-export default function Page(){
+export default function Page({params} : any){
 
   const passwordRef = useRef(null)
-  const {emailUsuario} = useContext(EmailContext)
-  //const emailUsuario = "mpmartinapadovani@gmail.com"
+  
+  const emailUsuario = params.tokenMail
   //Obtengo el mail del usuario desde el contexto, que fue agregardo desde la ruta de /recuperar
-  //@ts-ignore
+  
+  const emailDecodificado = decode(emailUsuario)
 
   async function enviarDatos(evento: FormEvent){
     evento.preventDefault()
       
     const datosAEnviar = {
-      email: emailUsuario,
+      email: emailDecodificado,
       //@ts-ignore
       password: passwordRef.current?.value
     }
