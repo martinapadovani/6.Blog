@@ -34,7 +34,7 @@ export async function POST(req:Request){
     const parametrosPlantilla = { 
         //Completamos los parametros para la plantilla del mail
         asunto: "Recupera tu contraseña",
-        from_name: "Blog de Roberto",
+        from_name: "OcktoCall",
         to_name: usuario.nombre,
         link: `http://localhost:3000/auth/recuperar/${tokenMail}`, 
         user_email: datos.email
